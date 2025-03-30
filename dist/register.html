@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Register</title>
+    <link rel="stylesheet" href="style.css">
+  <script defer src="register_bundle.js"></script></head>
+  <body>
+    <div id="app">
+      <h1>Register</h1>
+      <form id="registerForm">
+        <div class="input-box">
+          <label for="username">Username:</label>
+          <input type="text" id="username" name="username"><br><br>
+        </div>
+        <div class="input-box">
+          <label for="password">Password:</label>
+          <input type="password" id="password" name="password"><br><br>
+        </div>
+        <input type="submit" value="Submit" class="btn">
+      </form>
+      <br>
+      <p class="register-link"><a href="/login">Already have an account? Login</a></p>
+      <div id="color-pattern">
+        <h2>Select Color Pattern</h2>
+        <div class="color-grid">
+          <div class="color-cell" style="background-color: red;"></div>
+          <div class="color-cell" style="background-color: green;"></div>
+          <div class="color-cell" style="background-color: blue;"></div>
+          </div>
+      </div>
+      <div id="image-pattern">
+        <h2>Select Image Pattern</h2>
+        <div class="image-grid">
+          <img src="/images/brain.jpeg" alt="Image 1" class="image-cell">
+          <img src="/images/dice.jpeg" alt="Image 2" class="image-cell">
+          <img src="/images/potato.jpg" alt="Image 3" class="image-cell">
+          <img src="/images/elephant.jpeg" alt="Image 4" class="image-cell">
+          <img src="/images/fish.jpeg" alt="Image 5" class="image-cell">
+          <img src="/images/kid.jpeg" alt="Image 6" class="image-cell">
+          <img src="/images/pikachu.jpeg" alt="Image 7" class="image-cell">
+          <img src="/images/smiley.jpeg" alt="Image 8" class="image-cell">
+          <img src="/images/random.png" alt="Image 9" class="image-cell">
+        </div>
+      </div>
+    </div>
+    </div>
+    <script src="register_bundle.js"></script>
+  </body>
+</html>

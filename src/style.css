@@ -1,0 +1,165 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: url("pexels-felixmittermeier-956999.jpg") no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
+#image-pattern {
+    margin-top: 20px; /* Adjust as needed */
+  }
+  
+  .image-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Adjust for desired grid size */
+    gap: 10px; /* Adjust as needed */
+  }
+  
+  .image-cell {
+    width: 100px; /* Adjust as needed */
+    height: 100px; /* Adjust as needed */
+    border: 1px solid #ccc;
+    cursor: pointer;
+  }
+  
+  .image-cell.selected {
+    border: 2px solid blue; /* Example highlight style */
+  }
+
+#app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 420px;
+  background: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 0 10px whitesmoke;
+  color: rgb(8, 6, 6);
+  border-radius: 10px;
+  padding: 30px 40px;
+}
+
+#app h1 {
+  font-size: 36px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.input-box {
+  position: relative;
+  width: 100%;
+  height: 50px;
+  margin: 30px 0;
+}
+
+.input-box input {
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  border: 2px solid whitesmoke;
+  border-radius: 40px;
+  font-size: 16px;
+  color: whitesmoke;
+  padding: 20px 45px 20px 20px;
+}
+
+.input-box input::placeholder {
+  color: whitesmoke;
+}
+
+.input-box i {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+}
+
+.remember-forgot {
+  display: flex;
+  justify-content: space-between;
+  color: whitesmoke;
+  font-size: 14.5px;
+  margin: -15px 0 15px;
+}
+
+.remember-forgot label input {
+  margin-right: 3px;
+}
+
+.remember-forgot a {
+  color: whitesmoke;
+  text-decoration: none;
+}
+
+.remember-forgot a:hover {
+  text-decoration: underline;
+}
+
+.btn {
+  width: 100%;
+  height: 45px;
+  background: whitesmoke;
+  border: none;
+  outline: none;
+  border-radius: 40px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  font-size: 16px;
+  color: #333;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.register-link {
+  font-size: 14.5px;
+  text-align: center;
+  margin: 20px 0 0;
+  color: whitesmoke;
+}
+
+.register-link a {
+  color: whitesmoke;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.register-link a:hover {
+  text-decoration: underline;
+}
+
+#color-pattern {
+  margin-top: 20px;
+}
+
+.color-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.color-cell {
+  width: 50px;
+  height: 50px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+
+.color-cell.selected {
+  border: 2px solid blue;
+}
