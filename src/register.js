@@ -1,58 +1,68 @@
-import './style.css';
+// src/register.js - Final Version
 
 document.addEventListener('DOMContentLoaded', () => {
-  const registerForm = document.getElementById('registerForm');
-  const colorGrid = document.querySelector('.color-grid');
-  const colorCells = document.querySelectorAll('.color-cell');
-  let selectedColors =[];
+    const generateBtn = document.getElementById('generateBtn');
+    const usernameInput = document.getElementById('username');
+    const optionsDiv = document.getElementById('password-options');
 
-  const imageGrid = document.querySelector('.image-grid');
-  const imageCells = document.querySelectorAll('.image-cell');
-  let selectedImages =[];
-
-  imageCells.forEach(cell => {
-    cell.addEventListener('click', () => {
-      const imageSrc = cell.src;
-      selectedImages.push(imageSrc);
-      cell.classList.add('selected');
-      console.log('Selected images:', selectedImages);
-    });
-  });
-
-  colorCells.forEach(cell => {
-    cell.addEventListener('click', () => {
-      const color = cell.style.backgroundColor;
-      selectedColors.push(color);
-      cell.classList.add('selected');
-      console.log('Selected colors:', selectedColors);
-    });
-  });
-
-  registerForm.addEventListener('submit', (event) => {
-    event.preventDefault();
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-
-    fetch('/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ username, password, selectedColors, selectedImages }), // Include selectedImages here
-    })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Registration failed');
+    generateBtn.addEventListener('click', async () => {
+        const username = usernameInput.value;
+        if (!username) {
+            alert('Please enter a username first.');
+            return;
         }
-        return response.text();
-      })
-      .then(data => {
-        console.log('Server response:', data);
-        alert('Registration successful!');
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        alert('Registration failed. Please try again.');
-      });
-  });
+
+        try {
+            // This fetch call should work now
+            const response = await fetch('/generate-passwords');
+            if (!response.ok) {
+                throw new Error(`Server responded with status: ${response.status}`);
+            }
+            const options = await response.json();
+            displayOptions(options);
+        } catch (error) {
+            console.error('Failed to generate passwords:', error);
+            alert('Could not generate password options. Check the server terminal and browser network tab for errors.');
+        }
+    });
 });
+
+// In src/register.js
+
+function displayOptions(options) {
+    const usernameInput = document.getElementById('username');
+    const optionsDiv = document.getElementById('password-options');
+    
+    optionsDiv.innerHTML = '<h3>Choose Your Password Suite:</h3>';
+    options.forEach((option, index) => {
+        const optionElem = document.createElement('div');
+        optionElem.style.marginBottom = '15px';
+        optionElem.innerHTML = `
+            <p><strong>Text:</strong> ${option.textPassword}</p>
+            <p><strong>Image Pattern:</strong> ${option.imageSequence.join(' ➔ ')}</p> <button class="btn select-btn" data-index="${index}">Select & Register</button>
+        `;
+        optionsDiv.appendChild(optionElem);
+    });
+
+    document.querySelectorAll('.select-btn').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const selectedOption = options[e.target.dataset.index];
+            registerUser(usernameInput.value, selectedOption);
+        });
+    });
+}
+
+async function registerUser(username, chosenSuite) {
+    const response = await fetch('/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, chosenSuite })
+    });
+
+    const resultText = await response.text();
+    alert(resultText);
+
+    if (response.ok) {
+        window.location.href = '/login';
+    }
+}

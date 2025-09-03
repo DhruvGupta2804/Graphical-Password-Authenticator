@@ -1,50 +1,25 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>Register</title>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register Test</title>
     <link rel="stylesheet" href="style.css">
-  </head>
-  <body>
+</head>
+<body>
     <div id="app">
       <h1>Register</h1>
       <form id="registerForm">
         <div class="input-box">
-          <label for="username">Username:</label>
-          <input type="text" id="username" name="username"><br><br>
+          <input type="text" id="username" placeholder="Username" required>
         </div>
-        <div class="input-box">
-          <label for="password">Password:</label>
-          <input type="password" id="password" name="password"><br><br>
-        </div>
-        <input type="submit" value="Submit" class="btn">
+        <button type="button" id="generateBtn" class="btn">Generate Password Options</button>
       </form>
       <br>
       <p class="register-link"><a href="/login">Already have an account? Login</a></p>
-      <div id="color-pattern">
-        <h2>Select Color Pattern</h2>
-        <div class="color-grid">
-          <div class="color-cell" style="background-color: red;"></div>
-          <div class="color-cell" style="background-color: green;"></div>
-          <div class="color-cell" style="background-color: blue;"></div>
-          </div>
-      </div>
-      <div id="image-pattern">
-        <h2>Select Image Pattern</h2>
-        <div class="image-grid">
-          <img src="/images/brain.jpeg" alt="Image 1" class="image-cell">
-          <img src="/images/dice.jpeg" alt="Image 2" class="image-cell">
-          <img src="/images/potato.jpg" alt="Image 3" class="image-cell">
-          <img src="/images/elephant.jpeg" alt="Image 4" class="image-cell">
-          <img src="/images/fish.jpeg" alt="Image 5" class="image-cell">
-          <img src="/images/kid.jpeg" alt="Image 6" class="image-cell">
-          <img src="/images/pikachu.jpeg" alt="Image 7" class="image-cell">
-          <img src="/images/smiley.jpeg" alt="Image 8" class="image-cell">
-          <img src="/images/random.png" alt="Image 9" class="image-cell">
-        </div>
-      </div>
+
+      <div id="password-options" style="margin-top: 20px; width: 100%;"></div>
+
     </div>
-    </div>
-    <script src="register_bundle.js"></script>
-  </body>
+    <script src="register.js"></script>
+</body>
 </html>
