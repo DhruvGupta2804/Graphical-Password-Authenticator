@@ -1,49 +1,68 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta charset="utf-8">
     <title>Login</title>
     <link rel="stylesheet" href="style.css">
-  </head>
-  <body>
+</head>
+<body>
     <div id="app">
-      <h1>Login</h1>
-      <form id="loginForm">
-        <div class="input-box">
-          <label for="loginUsername">Username:</label>
-          <input type="text" id="loginUsername" name="loginUsername"><br><br>
-        </div>
-        <div class="input-box">
-          <label for="loginPassword">Password:</label>
-          <input type="password" id="loginPassword" name="loginPassword"><br><br>
-        </div>
-        <input type="submit" value="Login" class="btn">
-      </form>
-      <br>
-      <p class="register-link"><a href="/register">Don't have an account? Register</a></p>
-      <div id="color-pattern">
-        <h2>Enter Color Pattern</h2>
-        <div class="color-grid">
-          <div class="color-cell" style="background-color: red;"></div>
-          <div class="color-cell" style="background-color: green;"></div>
-          <div class="color-cell" style="background-color: blue;"></div>
-        </div>
-        <div id="image-pattern">
-            <h2>Select Image Pattern</h2>
-            <div class="image-grid">
-              <img src="/images/brain.jpeg" alt="Image 1" class="image-cell">
-              <img src="/images/dice.jpeg" alt="Image 2" class="image-cell">
-              <img src="/images/potato.jpg" alt="Image 3" class="image-cell">
-              <img src="/images/elephant.jpeg" alt="Image 4" class="image-cell">
-              <img src="/images/fish.jpeg" alt="Image 5" class="image-cell">
-              <img src="/images/kid.jpeg" alt="Image 6" class="image-cell">
-              <img src="/images/pikachu.jpeg" alt="Image 7" class="image-cell">
-              <img src="/images/smiley.jpeg" alt="Image 8" class="image-cell">
-              <img src="/images/random.png" alt="Image 9" class="image-cell">
+        <h1>Login</h1>
+        <div id="password-step">
+            <div class="input-box">
+                <input type="text" id="loginUsername" placeholder="Username" required>
             </div>
-          </div>
-      </div>
+            <div class="input-box">
+                <input type="password" id="loginPassword" placeholder="Password" required>
+            </div>
+            <button id="verifyPasswordBtn" class="btn">Next</button>
+        </div>
+
+        <div id="image-step" style="display: none;">
+            <h2>Select Your Image Pattern</h2>
+<div class="image-grid">
+  <div class="image-cell-wrapper">
+    <img src="/Image grid/brain.jpeg" alt="Image 1" class="image-cell">
+    <span class="click-counter"></span>
+  </div>
+  <div class="image-cell-wrapper">
+    <img src="/Image grid/dice.jpeg" alt="Image 2" class="image-cell">
+    <span class="click-counter"></span>
+  </div>
+  <div class="image-cell-wrapper">
+    <img src="/Image grid/potato.jpg" alt="Image 3" class="image-cell">
+    <span class="click-counter"></span>
+  </div>
+  <div class="image-cell-wrapper">
+    <img src="/Image grid/elephant.jpeg" alt="Image 4" class="image-cell">
+    <span class="click-counter"></span>
+  </div>
+  <div class="image-cell-wrapper">
+    <img src="/Image grid/fish.jpeg" alt="Image 5" class="image-cell">
+    <span class="click-counter"></span>
+  </div>
+  <div class="image-cell-wrapper">
+    <img src="/Image grid/kid.jpeg" alt="Image 6" class="image-cell">
+    <span class="click-counter"></span>
+  </div>
+  <div class="image-cell-wrapper">
+    <img src="/Image grid/pikachu.jpeg" alt="Image 7" class="image-cell">
+    <span class="click-counter"></span>
+  </div>
+  <div class="image-cell-wrapper">
+    <img src="/Image grid/smiley.jpeg" alt="Image 8" class="image-cell">
+    <span class="click-counter"></span>
+  </div>
+  <div class="image-cell-wrapper">
+    <img src="/Image grid/random.png" alt="Image 9" class="image-cell">
+    <span class="click-counter"></span>
+  </div>
+</div>
+            <button id="finalLoginBtn" class="btn" style="margin-top: 20px;">Login</button>
+        </div>
+        <br>
+        <p class="register-link"><a href="/register">Don't have an account? Register</a></p>
     </div>
-    <script src="login_bundle.js"></script>
-  </body>
+    <script src="login.js"></script>
+</body>
 </html>

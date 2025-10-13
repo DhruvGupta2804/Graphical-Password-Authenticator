@@ -1,6 +1,6 @@
-// ga.js - Updated for Image Patterns
+// ga.js - Updated with an Advanced Fitness Function
 
-// --- 1. Helper Functions ---
+// --- 1. Helper Functions (No changes here) ---
 const generateRandomText = (length) => {
     const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     let result = '';
@@ -10,10 +10,8 @@ const generateRandomText = (length) => {
     return result;
 };
 
-// UPDATED: This function now maps characters to one of your 9 images.
 const generateCharToImageMap = (textPassword) => {
     const uniqueChars = [...new Set(textPassword)];
-    // This is our new palette of images
     const images = [
         'brain.jpeg', 'dice.jpeg', 'potato.jpg',
         'elephant.jpeg', 'fish.jpeg', 'kid.jpeg',
@@ -21,57 +19,88 @@ const generateCharToImageMap = (textPassword) => {
     ];
     let map = new Map();
     uniqueChars.forEach(char => {
-        // Assign a random image from the list to each unique character
         map.set(char, images[Math.floor(Math.random() * images.length)]);
     });
     return map;
 };
 
-// --- 2. Define the Chromosome ---
+
+// --- 2. Chromosome Definition (No changes here) ---
 const createChromosome = () => {
     const textPassword = generateRandomText(8);
-    // Use the new image mapping function
     const imageMap = generateCharToImageMap(textPassword);
-    // The imageSequence is now an array of image filenames
     const imageSequence = [...textPassword].map(char => imageMap.get(char));
-    
-    // The chromosome now holds an imageMap instead of a colorMap
     return { textPassword, imageMap, imageSequence };
 };
 
 
-// --- 3. The Fitness Function (no changes needed) ---
+// --- 3. ADVANCED FITNESS FUNCTION ---
+/**
+ * This function calculates a score based on the security principles
+ * outlined in the project report[cite: 329, 552]. It evaluates the
+ * complexity and randomness of both the text and image passwords.
+ */
 const calculateFitness = (chromosome) => {
-    let score = 0;
-    score += chromosome.textPassword.length * 2;
-    score += new Set(chromosome.textPassword).size;
-    return score;
+    // --- 3.1: Text Password Security Score ---
+    const text = chromosome.textPassword;
+    let textScore = 0;
+    // Reward length
+    textScore += text.length * 2;
+    // Reward character variety (uppercase, lowercase, numbers)
+    if (/[a-z]/.test(text)) textScore += 5;
+    if (/[A-Z]/.test(text)) textScore += 5;
+    if (/[0-9]/.test(text)) textScore += 5;
+    // Reward number of unique characters
+    textScore += new Set(text).size;
+
+    // --- 3.2: Image Pattern Security Score ---
+    const sequence = chromosome.imageSequence;
+    let imageScore = 0;
+    // Reward sequence length (same as text length)
+    imageScore += sequence.length * 2;
+    // Reward variety of images used
+    imageScore += new Set(sequence).size * 3;
+    // Evaluate Non-Linearity: Penalize simple, repetitive patterns 
+    let nonLinearity = 0;
+    for (let i = 0; i < sequence.length - 1; i++) {
+        if (sequence[i] !== sequence[i+1]) {
+            nonLinearity++;
+        }
+    }
+    imageScore += nonLinearity * 2;
+
+    // --- 3.3: Final Weighted Score ---
+    // Weights can be tuned to prioritize text vs. image complexity.
+    const textWeight = 0.5;
+    const imageWeight = 0.5;
+    const finalScore = (textScore * textWeight) + (imageScore * imageWeight);
+
+    return finalScore;
 };
 
 
-// --- 4. Crossover Function (updated to use new map) ---
+// --- 4 & 5. Crossover and Mutation (No changes here) ---
 const crossover = (parent1, parent2) => {
     const mid = Math.floor(parent1.textPassword.length / 2);
     const childText = parent1.textPassword.substring(0, mid) + parent2.textPassword.substring(mid);
-    const childImageMap = generateCharToImageMap(childText); // Use the new function
+    const childImageMap = generateCharToImageMap(childText);
     const childImageSequence = [...childText].map(char => childImageMap.get(char));
     return { textPassword: childText, imageMap: childImageMap, imageSequence: childImageSequence };
 };
 
-// --- 5. Mutation Function (updated to use new map) ---
 const mutate = (chromosome) => {
     const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
     const i = Math.floor(Math.random() * chromosome.textPassword.length);
     const newChar = chars.charAt(Math.floor(Math.random() * chars.length));
     const newText = chromosome.textPassword.substring(0, i) + newChar + chromosome.textPassword.substring(i + 1);
     
-    const newImageMap = generateCharToImageMap(newText); // Use the new function
+    const newImageMap = generateCharToImageMap(newText);
     const newImageSequence = [...newText].map(char => newImageMap.get(char));
     return { textPassword: newText, imageMap: newImageMap, imageSequence: newImageSequence };
 };
 
 
-// --- 6. The Main GA Runner (no changes needed) ---
+// --- 6. Main GA Runner (No changes here) ---
 const runGA = () => {
     let population = [];
     for (let i = 0; i < 20; i++) {

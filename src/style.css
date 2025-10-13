@@ -165,3 +165,52 @@ body {
 .color-cell.selected {
   border: 2px solid blue;
 }
+
+/* In src/style.css */
+
+.password-option-box {
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.password-option-image-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px; /* Space between images */
+  margin: 10px 0;
+  align-items: center;
+}
+
+.password-option-image {
+  width: 45px;
+  height: 45px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  object-fit: cover; /* This makes sure the images fit well */
+}
+/* In src/style.css */
+
+.image-cell-wrapper {
+  position: relative; /* This is necessary for positioning the counter */
+  cursor: pointer;
+}
+
+.click-counter {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background-color: #00ff7f; /* Bright green */
+  color: #111; /* Dark text for contrast */
+  font-weight: bold;
+  font-size: 14px;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: none; /* Hidden by default */
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+  line-height: 1; /* Helps with vertical alignment */
+}

@@ -29,17 +29,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // In src/register.js
 
+// In src/register.js
+
 function displayOptions(options) {
     const usernameInput = document.getElementById('username');
     const optionsDiv = document.getElementById('password-options');
     
     optionsDiv.innerHTML = '<h3>Choose Your Password Suite:</h3>';
     options.forEach((option, index) => {
+        // Create a string of <img> tags from the image sequence array
+        const imagesHTML = option.imageSequence.map(filename => 
+            `<img src="/Image grid/${filename}" alt="pattern image" class="password-option-image">`
+        ).join('');
+
         const optionElem = document.createElement('div');
-        optionElem.style.marginBottom = '15px';
+        optionElem.className = 'password-option-box'; // Use a class for styling
         optionElem.innerHTML = `
             <p><strong>Text:</strong> ${option.textPassword}</p>
-            <p><strong>Image Pattern:</strong> ${option.imageSequence.join(' ➔ ')}</p> <button class="btn select-btn" data-index="${index}">Select & Register</button>
+            <div class="password-option-image-container">${imagesHTML}</div>
+            <button class="btn select-btn" data-index="${index}">Select & Register</button>
         `;
         optionsDiv.appendChild(optionElem);
     });

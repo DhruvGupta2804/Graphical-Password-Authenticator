@@ -1,26 +1,21 @@
 const express = require('express');
 const path = require('path');
 const mongoose = require('mongoose');
-const bcryptjs = require('bcryptjs');
+const argon2 = require('argon2'); // Using argon2
 
-// --- Require Models and GA logic for Phase 2 ---
-const User = require('./models/User'); // We only need the User model for now
+// --- Require Models ---
+const User = require('./models/User');
 const { runGA } = require('./ga.js');
 
 const app = express();
 const port = 3001;
 
 // --- Database Connection ---
-mongoose.connect('mongodb://127.0.0.1:27017/authdb', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-}).then(() => console.log('MongoDB Connected successfully!'))
-  .catch(err => console.error('MongoDB connection error:', err));
+mongoose.connect('mongodb+srv://dhruvgupta2804_db_user:1NcMUFJA8g9OedjQ@cluster0.o7uenjo.mongodb.net/authdb?retryWrites=true&w=majority&appName=Cluster0').then(() => console.log('MongoDB Connected successfully!')).catch(err => console.error('MongoDB connection error:', err));
 
 // --- Middleware ---
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-// Serve files from the 'src' directory
 app.use(express.static(path.join(__dirname, 'src')));
 
 // --- HTML Page Routes ---
@@ -28,9 +23,8 @@ app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'src', 'index.html'
 app.get('/register', (req, res) => res.sendFile(path.join(__dirname, 'src', 'register.html')));
 app.get('/login', (req, res) => res.sendFile(path.join(__dirname, 'src', 'login.html')));
 
-// --- API Routes for Phase 2 ---
+// --- API Routes ---
 
-// Route to generate password options using the GA
 app.get('/generate-passwords', (req, res) => {
     try {
         const options = runGA();
@@ -41,24 +35,24 @@ app.get('/generate-passwords', (req, res) => {
     }
 });
 
-// Route to handle user registration
+// --- REGISTRATION ROUTE (Using Argon2) ---
 app.post('/register', async (req, res) => {
     const { username, chosenSuite } = req.body;
     try {
         const existingUser = await User.findOne({ username });
-        if (existingUser) {
-            return res.status(400).send('Username already exists.');
-        }
+        if (existingUser) return res.status(400).send('Username already exists.');
 
         const combinedString = chosenSuite.textPassword + chosenSuite.imageSequence.join('');
-        const salt = await bcryptjs.genSalt(10);
-        const passwordHash = await bcryptjs.hash(combinedString, salt);
+        const passwordHash = await argon2.hash(combinedString);
+
+        const textPasswordHash = await argon2.hash(chosenSuite.textPassword);
 
         const newUser = new User({
             username,
             passwordHash,
+            textPasswordHash,
             textPassword: chosenSuite.textPassword,
-            colorMap: chosenSuite.colorMap,
+            imageMap: chosenSuite.imageMap,
             imageSequence: chosenSuite.imageSequence
         });
 
@@ -70,47 +64,38 @@ app.post('/register', async (req, res) => {
     }
 });
 
-// Simplified login route for testing Phase 2
-app.post('/login', async (req, res) => {
-    const { username, password, selectedImages } = req.body;
 
-    // The frontend will send behavioral data, but we ignore it in this version.
+// --- PASSWORD VERIFICATION ROUTE (Using Argon2) ---
+app.post('/verify-password', async (req, res) => {
+    const { username, password } = req.body;
     try {
         const user = await User.findOne({ username });
-        if (!user) {
-            return res.status(401).send('Invalid credentials.');
-        }
-        
-        // This part is tricky and needs to be correct. We assume the frontend's
-        // selectedImages contains the color sequence derived from the image clicks.
-        // For now, let's assume the frontend sends the raw image filenames.
-        // We will need to convert this to the color sequence to validate.
-        // NOTE: The logic to convert selectedImages back to the color sequence needs to be implemented.
-        // For this example, let's pretend a simple hash check is enough for the text part.
-        
-        // A more direct check for Phase 2:
-        const userEnteredPassword = password; // The text part
-        const userClickedSequence = selectedImages.map(src => src.split('/').pop()); // e.g., ['dice.jpeg', 'brain.jpeg']
+        if (!user) return res.status(401).send('Verification failed.');
 
-        // We need to verify if the user's plain text password and their click sequence,
-        // when combined, match the stored hash.
-        
-        // Let's find the expected color sequence from the stored user data
-        const expectedColorSequence = user.imageSequence;
-        
-        // To properly check, you would need a mapping from image file to color.
-        // Since we don't have that on the server, we will do a more direct, simplified check.
-        // This is a placeholder for a more robust validation.
-        const combinedInput = password + user.imageSequence.join('');
-        const isMatch = await bcryptjs.compare(password + expectedColorSequence.join(''), user.passwordHash);
+        const isMatch = await argon2.verify(user.textPasswordHash, password);
+        if (!isMatch) return res.status(401).send('Verification failed.');
+
+        res.status(200).send('Password verified.');
+    } catch (error) {
+        res.status(500).send('Server error.');
+    }
+});
 
 
-        if (!isMatch) {
-             return res.status(401).send('Invalid password or image pattern.');
-        }
+// --- FINAL LOGIN ROUTE (Using Argon2) ---
+app.post('/login', async (req, res) => {
+    const { username, selectedImages } = req.body;
+    try {
+        const user = await User.findOne({ username });
+        if (!user) return res.status(401).send('Invalid credentials.');
 
-        res.status(200).send('Login successful! (Phase 2 Test)');
+        const clickedImageNames = selectedImages.map(src => decodeURIComponent(src).split('/').pop());
+        const combinedString = user.textPassword + clickedImageNames.join('');
 
+        const isMatch = await argon2.verify(user.passwordHash, combinedString);
+        if (!isMatch) return res.status(401).send('Invalid image pattern.');
+
+        res.status(200).send('Login Successful!');
     } catch (error) {
         console.error("ERROR DURING LOGIN:", error);
         res.status(500).send('Server error during login.');
